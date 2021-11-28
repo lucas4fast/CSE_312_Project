@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+main <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+</head>
+<body>
+    <p>
+        <form action="/image-upload" id="image-form" method="post" enctype="multipart/form-data">
+            <label for="form-file">Image: </label>
+            <input id="form-file" type="file" name="upload">
+            <br/>
+            <label for="image-form-name">Caption: </label>
+            <input id="image-form-name" type="text" name="name">
+            <input type="submit" value="Submit">
+         </form>
+    </p>
+    
+</body>
+</html>
