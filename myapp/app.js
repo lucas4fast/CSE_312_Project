@@ -28,6 +28,10 @@ app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname,"/pageDesigns/login.html"))
 })
 
+app.get('/register', (req, res) => {
+  res.sendFile(path.join(__dirname,"/pageDesigns/register.html"))
+})
+
 app.get('/feed', (req, res) => {
   res.sendFile(path.join(__dirname,"pageDesigns/feed.html"))
 })
