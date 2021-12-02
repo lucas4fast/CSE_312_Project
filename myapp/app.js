@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const pgp = require("pg-promise")();
+const db = pgp("postgres://postgres:postgres@postgres:5432/postgres");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -53,7 +55,7 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`Example app listening at http://localhost:${8000}`)
 })
 
 module.exports = app;
