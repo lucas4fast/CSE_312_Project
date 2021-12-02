@@ -32,7 +32,7 @@ app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname,"/pageDesigns/login.html"))
 })
 app.post('/login', urlencodedParser,  (req, res) => {
-  res.redirect('/feed',301)
+  res.redirect('/',301)
 })
 app.get('/register', (req, res) => {
   res.sendFile(path.join(__dirname,"/pageDesigns/register.html"))
