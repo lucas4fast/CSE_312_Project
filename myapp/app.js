@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const pgp = require("pg-promise")();
 const db = pgp("postgres://postgres:postgres@postgres:5432/postgres");
+const bodyParser = require("body-parser");
+const urlencodedParser = bodyParser.urlencoded({ extended: true });
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -29,9 +31,14 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname,"/pageDesigns/login.html"))
 })
-
+app.post('/login', urlencodedParser,  (req, res) => {
+  res.redirect('/feed',301)
+})
 app.get('/register', (req, res) => {
   res.sendFile(path.join(__dirname,"/pageDesigns/register.html"))
+})
+app.post('/register', urlencodedParser,  (req, res) => {
+  res.redirect("/login",301)
 })
 
 app.get('/feed', (req, res) => {
