@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname,"/pageDesigns/login.html"))
 })
-app.post('/login', urlencodedParser,  (req, res) => {
+app.post('/login', urlencodedParser,  (req, res,next) => {
   if(myusers.checkUser(req.body.username,req.body.password)){
     res.redirect(301,'/')
   }
@@ -72,7 +72,5 @@ app.use(function(err, req, res, next) {
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${8000}`)
 })
-
-
 
 module.exports = app;

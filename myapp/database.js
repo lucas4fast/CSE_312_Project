@@ -14,15 +14,15 @@ const user = sql.define(
       type: sequelize.STRING,
       allowNull: false,
     },
+    online: {
+      type: sequelize.BOOLEAN,
+      allowNull: false,
+    },
     id: {
       type: sequelize.BIGINT,
       autoIncrement: true,
+      primaryKey: true,
     },
-    online: {
-      type: sequelize.BOOLEAN,
-      defaultValue: false,
-
-    }
   },
   {
     timestamps: false,
