@@ -27,7 +27,9 @@ app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname,"/pageDesigns/login.html"))
 })
 app.post('/login', urlencodedParser,  (req, res,next) => {
-  if(myusers.checkUser(req.body.username,req.body.password)){
+  var isUser = myusers.checkUser(req.body.username,req.body.password);
+  //console.log('isUser value'+isUser)
+  if(isUser==true) {
     res.redirect(301,'/')
   }
   else{

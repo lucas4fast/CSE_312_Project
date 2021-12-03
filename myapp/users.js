@@ -4,8 +4,13 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 
-async function checkUser(username, password) {
+function checkUser(username, password) {
     //... fetch user from a db etc.
+    let match = checkHelper(username,password)
+    console.log('VALUE RETURNED FROM HELPER: '+ match)
+    return match
+}
+function checkHelper(username,password){
     var hashed = ''
     console.log(username +' with type of ' +typeof(username)+ ' '+ password + ' with type of '+ typeof(password))
     db.oneOrNone(`SELECT * FROM "user" where username = '${username}';`)
@@ -13,13 +18,15 @@ async function checkUser(username, password) {
         console.log(data)
         console.log(data.password); // print new user id;
         hashed = data.password
+        console.log('HASHED'+hashed)
+        var match = bcrypt.compareSync(password, hashed);
+        console.log('MATCH RESULT'+match) 
+        return match   
     })
     .catch(error => {
         console.log('ERROR:', error); // print error;
     });
     
-    const match = bcrypt.compareSync(password, hashed);
-    return match
 }
 async function createUser(user,pass) {
     hashPass = bcrypt.hashSync(pass,saltRounds);
@@ -41,6 +48,7 @@ const getUsers = (req,res) => {
         if (error) {
             throw error
         }
+        console.log(results)
         res.status(200).json(results.rows)
     })
 }
