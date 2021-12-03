@@ -1,15 +1,10 @@
-var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const pgp = require("pg-promise")();
-const db = pgp("postgres://postgres:postgres@postgres:5432/postgres");
 const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: true });
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const myusers = require('./users.js')
 
 var app = express();
 const port = 6006;
@@ -32,18 +27,31 @@ app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname,"/pageDesigns/login.html"))
 })
 app.post('/login', urlencodedParser,  (req, res) => {
-  res.redirect('/',301)
+  if(myusers.checkUser(req.body.username,req.body.password)){
+    res.redirect(301,'/')
+  }
+  else{
+    res.sendFile(path.join(__dirname),"/pageDesigns/notfoundNoAuth.html")
+  }
+
 })
 app.get('/register', (req, res) => {
   res.sendFile(path.join(__dirname,"/pageDesigns/register.html"))
 })
-app.post('/register', urlencodedParser,  (req, res) => {
-  res.redirect("/login",301)
+app.post('/register', urlencodedParser,  (req, res,next) => {
+  console.log(myusers.createUser(req.body.username,req.body.password))
+  res.redirect(301,"/login")
 })
 
 app.get('/feed', (req, res) => {
   res.sendFile(path.join(__dirname,"pageDesigns/feed.html"))
 })
+
+app.get('/users/', myusers.getUsers)
+app.get('/users/:id', myusers.getUserById)
+app.post('/users', myusers.createUser)
+//app.put('/users/:id', myusers.updateUser)
+//app.delete('/users/:id', myusers.deleteUser)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -64,5 +72,7 @@ app.use(function(err, req, res, next) {
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${8000}`)
 })
+
+
 
 module.exports = app;

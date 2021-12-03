@@ -5,7 +5,7 @@ WORKDIR /myapp
 COPY . .
 
 RUN npm install
-RUN npm install pg-promise
+RUN npm install pg-promise && npm install bcrypt
 # Allow port 8000 to be accessed
 # from outside the container
 EXPOSE 8000
