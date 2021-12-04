@@ -26,17 +26,17 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname,"/pageDesigns/login.html"))
 })
-app.post('/login', urlencodedParser,  (req, res,next) => {
-  var isUser = myusers.checkUser(req.body.username,req.body.password);
-  //console.log('isUser value'+isUser)
-  if(isUser==true) {
-    res.redirect(301,'/')
+app.post('/login', urlencodedParser,  (req, res) => {
+  const isUser = myusers.checkUser(req.body.username,req.body.password)
+  console.log('isUser: '+isUser)
+  if(isUser) {
+    res.redirect(301,'/feed')
   }
   else{
     res.sendFile(path.join(__dirname),"/pageDesigns/notfoundNoAuth.html")
   }
-
 })
+
 app.get('/register', (req, res) => {
   res.sendFile(path.join(__dirname,"/pageDesigns/register.html"))
 })
