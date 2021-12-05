@@ -23,6 +23,10 @@ const user = sql.define(
       autoIncrement: true,
       primaryKey: true,
     },
+    image_path: {
+      type: sequelize.STRING,
+      allowNull: true,
+    },
   },
   {
     timestamps: false,
