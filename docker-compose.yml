@@ -18,3 +18,7 @@ services:
       - postgres
     ports:
       - "8000:6006"
+    volumes:
+      - media:/media
+volumes:
+  media:
