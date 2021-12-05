@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-main <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,12 +8,14 @@ main <!DOCTYPE html>
 </head>
 <body>
     <p>
+        <h2>Profile Pic Upload</h2>
+    <p>
         <form action="/image-upload" id="image-form" method="post" enctype="multipart/form-data">
             <label for="form-file">Image: </label>
-            <input id="form-file" type="file" name="upload">
+            <input type="file" name="image">
             <br/>
-            <label for="image-form-name">Caption: </label>
-            <input id="image-form-name" type="text" name="name">
+            <label for="image-form-name">User ID: </label>
+            <input type="text" name="username">
             <input type="submit" value="Submit">
          </form>
     </p>
