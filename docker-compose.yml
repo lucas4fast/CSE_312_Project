@@ -20,5 +20,19 @@ services:
       - "8000:6006"
     volumes:
       - media:/media
+
+  messaging:
+    build:
+      context: messaging
+    environment:
+      DB_SCHEMA: postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    depends_on:
+      - postgres
+    ports:
+      - "8001:8001"
+    volumes:
+      - media:/media
 volumes:
   media:
