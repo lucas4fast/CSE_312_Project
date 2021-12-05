@@ -5,6 +5,7 @@ var logger = require('morgan');
 const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: true });
 const myusers = require('./users.js')
+const uploadRouter = require('./uploader.js');
 
 var app = express();
 const port = 6006;
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(uploadRouter);
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname,"/pageDesigns/index.html"))
@@ -47,6 +49,11 @@ app.post('/register', urlencodedParser,  (req, res,next) => {
 
 app.get('/feed', (req, res) => {
   res.sendFile(path.join(__dirname,"pageDesigns/feed.html"))
+})
+
+// Image upload page
+app.get('/upload', (req, res) => {
+  res.sendFile(path.join(__dirname,"/pageDesigns/imageUpload.html"))
 })
 
 app.get('/users/', myusers.getUsers)
