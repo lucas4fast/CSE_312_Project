@@ -20,12 +20,14 @@ async function checkUser(username, password) {
     console.log('Match: '+match)
     return match
 }
+async function addToken(username,token){
+    let hashed = await bcrypt.hash(token,saltRounds)
+    await db.none(`UPDATE "user" SET token = $1 WHERE username = $2`, [hashed, username]);
+}
+
 async function createUser(user,pass) {
-    hashPass = bcrypt.hashSync(pass,saltRounds);
+    let hashPass = await bcrypt.hash(pass,saltRounds);
     console.log('Attempting to insert username: '+user + ' and password: '+ pass)
-    console.log(typeof(hashPass))
-
-
     db.one(`INSERT INTO "user"(username,password,online) VALUES('${user}','${hashPass}',false) RETURNING id;`)
     .then(data => {
         console.log(data.id); // print new user id;
@@ -44,15 +46,22 @@ const getUsers = (req,res) => {
         res.status(200).json(results.rows)
     })
 }
-async function getUserById(user_id) {
-    const user_found = db.oneOrNone(`select * from "user" where id = '${user_id}';`)
-    return user_found
+function generateToken(size) {
+
+    var a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".split("");
+    var b = [];  
+    for (var i=0; i<size; i++) {
+        var j = (Math.random() * (a.length-1)).toFixed(0);
+        b[i] = a[j];
+    }
+    return b.join("");
 }
 
 module.exports = {
     addImage,
     checkUser,
     getUsers,
-    getUserById,
     createUser,
+    addToken,
+    generateToken,
 }
