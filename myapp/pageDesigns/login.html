@@ -51,25 +51,31 @@ body {
 </div>
 
 <div>
-  <div id="Login" style="background-color: black; margin-top: 5%; width: 20%; top: 40%; margin-left: 35%; height: 100%;">
-    <h style="margin-left:27%; font-weight:bold; color:white">Login<h>
-    <div style="margin-left:27%;">
-      <input id="LoginForm" type="text" placeholder="*Username"/>
-    </div>
-    <div style="margin-left:27%; top:2%">
-      <input id="LoginForm" type="password" placeholder="*Password"/>
-    </div>
+  <div id="Login"
+    style="background-color: black; margin-top: 5%; width: 20%; top: 40%; margin-left: 35%; height: 100%;">
+    <h2 style="margin-left:10%; font-weight:bold; color:white">Login</h2>
+      <form action="/login" method="post">
+      
+        <div style="margin-left:10%;top:5% ;color:white">
+          <label for="username">Enter Username: </label>
+        </div>
+      
+        <div style="margin-left:10%; top:5%">
+          <input id="username" type="text" name="username" placeholder="*Username">
+        </div>
+      
+        <div style="margin-left:10%; top:5%;color:white">
+          <label for="password">Enter Password: </label>
+        </div>
+        <div style="margin-left:10%; top:5%">
+          <input id="password" type="password" name="password" placeholder="*Password">
+        </div>
+        <div style="margin-left:10%; top:5%">
+          <input type="submit" value="LOGIN">
+        </div>
+      </form>
   </div>
 </div>
-
-<form action="/login" method="post">
-  <label for="username">Enter Username: </label>
-  <input id="username" type="text" name="username" placeholder="*Username">
-  <label for="password">Enter Password: </label>
-  <input id="password" type="text" name="password" placeholder="*Password">
-  
-  <input type="submit" value="LOGIN">
-</form>
 
 </body>
 </html>
