@@ -6,6 +6,7 @@ const saltRounds = 10;
 // Function to add image path to database
 async function addImage(username,image_path) {
     try {
+        console.log('Attempting to insert image path: '+image_path + ' for user: '+ username)
         path = "./media/" + image_path
         await db.none(`UPDATE "user" SET image_path = $1 WHERE username = $2`, [path, username]);
     } catch (err) {
