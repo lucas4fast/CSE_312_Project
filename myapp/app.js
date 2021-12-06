@@ -32,8 +32,8 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname,"/pageDesigns/login.html"))
 })
-app.post('/login', urlencodedParser,  (req, res) => {
-  const isUser = myusers.checkUser(req.body.username,req.body.password)
+app.post('/login', urlencodedParser,  async(req, res) => {
+  let isUser = await myusers.checkUser(req.body.username,req.body.password)
   console.log('isUser: '+isUser)
   if(isUser) {
     const token =myusers.generateToken(30)
