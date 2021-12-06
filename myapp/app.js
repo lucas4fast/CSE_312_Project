@@ -63,10 +63,10 @@ app.get('/upload', (req, res) => {
   res.sendFile(path.join(__dirname,"/pageDesigns/imageUpload.html"))
 })
 
-app.get('/users/', async(req,res)=> {
-  var users =[]
+app.get('/users/', (req,res)=> {
+  
   try {
-    await db.any(`SELECT * from "user";`)
+    db.any(`SELECT * from "user";`)
     .then(data => {
       console.log(data)
       res.send(data)
