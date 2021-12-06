@@ -3,7 +3,6 @@ const db = pgp("postgres://postgres:postgres@postgres:5432/postgres");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-
 // Function to add image path to database
 async function addImage(username,image_path) {
     try {
@@ -57,23 +56,11 @@ function generateToken(size) {
     }
     return b.join("");
 }
-async function getUserById(user_id) {
-    const user_found = db.oneOrNone(`select * from "user" where id = '${user_id}';`)
-    return user_found
-}
-async function getUserByAuth(token){
-
-    let user_found = await getUserById(user_id)
-
-    return user_found.username
-
-}
 
 module.exports = {
     addImage,
     checkUser,
     getUsers,
-    getUserById,
     createUser,
     addToken,
     generateToken,

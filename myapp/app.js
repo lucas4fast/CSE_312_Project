@@ -6,6 +6,10 @@ const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: true });
 const myusers = require('./users.js')
 const uploadRouter = require('./uploader.js');
+const pgp = require("pg-promise")();
+const db = pgp("postgres://postgres:postgres@postgres:5432/postgres");
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 var app = express();
 const port = 6006;
@@ -59,8 +63,58 @@ app.get('/upload', (req, res) => {
   res.sendFile(path.join(__dirname,"/pageDesigns/imageUpload.html"))
 })
 
-app.get('/users/', myusers.getUsers)
-app.get('/users/:id', myusers.getUserById)
+app.get('/users/', async(req,res)=> {
+  var users =[]
+  try {
+    await db.any(`SELECT * from "user";`)
+    .then(data => {
+      console.log(data)
+      res.send(data)
+    })
+  }
+  catch (error) {
+    res.send('ERROR',error)
+  }
+})
+app.get('/users/:id', (req,res) => {
+  db.oneOrNone(`select username from "user" where id = '${req.params.id}';`)
+    .then(data => {
+        console.log(data.username); // print new user id;
+        res.send(data.username)
+    })
+    .catch(error => {
+        console.log('ERROR:', error); // print error;
+        res.send('NOT FOUND')
+    });
+})
+app.get('/token/', (req,res)=>{
+  try {
+    const token = req.cookies['Authentication'];
+    ret = 'NOT FOUND'
+    db.any(`SELECT token,username from "user";`)
+      .then(data => {
+          data.map(u =>{
+              if(u.token != null && token != null){
+                console.log(token,u.token)
+                  bcrypt.compare(token,u.token).then((match)=>{
+                      if(match){
+                          ret = u.username
+                          res.send(ret)
+                      }
+                  })
+              }
+          })
+          if(token == null){
+            res.send('NOT FOUND')
+          }
+    })
+  }
+  catch (error)  {
+    console.log(error)
+    res.send('NOT FOUND')
+  }
+
+})
 app.post('/users', myusers.createUser)
 //app.put('/users/:id', myusers.updateUser)
 //app.delete('/users/:id', myusers.deleteUser)
