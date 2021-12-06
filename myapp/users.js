@@ -46,7 +46,7 @@ async function addToken(username,token){
 async function createUser(user,pass) {
     let hashPass = await bcrypt.hash(pass,saltRounds);
     console.log('Attempting to insert username: '+user + ' and password: '+ pass)
-    db.one(`INSERT INTO "user"(username,password,online) VALUES('${user}','${hashPass}',false) RETURNING id;`)
+    db.one(`INSERT INTO "user"(username,password,online) VALUES('${user}','${hashPass}',true) RETURNING id;`)
     .then(data => {
         console.log(data.id); // print new user id;
     })

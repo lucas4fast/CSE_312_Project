@@ -95,9 +95,48 @@ app.get('/users/:id', (req,res) => {
         res.send('NOT FOUND')
     });
 })
-app.get('/online', (req,res)=>{
+app.get('/online/', (req,res)=>{
+  var users = []
+  try {
+    db.any(`SELECT online,token,username from "user";`)
+    .then(data => {
+      data.map(u =>{
+        if(u.token != null && u.online != false){
+          console.log(u.username)
+          users.push(u.username)
+        }
+      })
+      //console.log(data)
+      res.send(users)
+    })
+  }
+  catch (error) {
+    res.send('ERROR',error)
+  }
   
 })
+app.post('/online/',(req,res)=>{
+  try {
+    const username = req.body.username
+    db.none(`UPDATE "user" SET online = $1 where username = $2`, [true, username]);
+  }
+  catch (error)  {
+    console.log(error)
+    res.send('NOT FOUND')
+  }
+})
+app.post('/logout/', (req,res)=>{
+  try {
+    const token = req.cookies['Authentication'];
+    const username = req.body.username
+    db.none(`UPDATE "user" SET token = $1 where username = $2`, [null, username]);
+  }
+  catch (error)  {
+    console.log(error)
+    res.send('NOT FOUND')
+  }
+})
+
 app.get('/token/', (req,res)=>{
   try {
     const token = req.cookies['Authentication'];
