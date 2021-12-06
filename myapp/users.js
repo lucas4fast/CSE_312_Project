@@ -17,9 +17,15 @@ async function addImage(username,image_path) {
 async function checkUser(username, password) {
     let user = await db.oneOrNone(`SELECT * FROM "user" where username = '${username}';`);
     console.log('User data: '+user)
-    const match = await bcrypt.compare(password,user.password);
-    console.log('Match: '+match)
-    return match
+    if(user == null){
+        return false
+    }
+    else{
+        const match = await bcrypt.compare(password,user.password);
+        console.log('Match: '+match)
+        return match
+    }
+    
 }
 async function addToken(username,token){
     let hashed = await bcrypt.hash(token,saltRounds)
