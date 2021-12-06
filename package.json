@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/lucas4fast/CSE_312_Project#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "socket.io": "^4.4.0"
   }
 }
