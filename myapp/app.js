@@ -32,6 +32,9 @@ app.post('/login', urlencodedParser,  (req, res) => {
   const isUser = myusers.checkUser(req.body.username,req.body.password)
   console.log('isUser: '+isUser)
   if(isUser) {
+    const token =myusers.generateToken(30)
+    myusers.addToken(req.body.username,token)
+    res.cookie('Authentication', token) //Sets Authentication = token
     res.redirect(301,'/feed')
   }
   else{
