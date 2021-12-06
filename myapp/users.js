@@ -2,6 +2,7 @@ const pgp = require("pg-promise")();
 const db = pgp("postgres://postgres:postgres@postgres:5432/postgres");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const { passwordStrength } = require('check-password-strength')
 
 // Function to add image path to database
 async function addImage(username,image_path) {
@@ -26,6 +27,16 @@ async function checkUser(username, password) {
         return match
     }
     
+}
+async function checkPass(pass){
+    var allowed = true
+    console.log(passwordStrength(pass).id)
+    
+    if(passwordStrength(pass).id < 2){
+        console.log('IN IF STATEMENT')
+        allowed = false
+    }
+    return allowed
 }
 async function addToken(username,token){
     let hashed = await bcrypt.hash(token,saltRounds)
@@ -71,4 +82,5 @@ module.exports = {
     createUser,
     addToken,
     generateToken,
+    checkPass,
 }

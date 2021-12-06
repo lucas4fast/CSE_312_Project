@@ -49,9 +49,17 @@ app.post('/login', urlencodedParser,  async(req, res) => {
 app.get('/register', (req, res) => {
   res.sendFile(path.join(__dirname,"/pageDesigns/register.html"))
 })
-app.post('/register', urlencodedParser,  (req, res,next) => {
-  console.log(myusers.createUser(req.body.username,req.body.password))
-  res.redirect(301,"/login")
+app.post('/register', urlencodedParser,  async(req, res,next) => {
+  const allowed = await myusers.checkPass(req.body.password)
+  console.log('VALUE RETURNED',allowed)
+  if(allowed){
+    console.log(myusers.createUser(req.body.username,req.body.password))
+    res.redirect(301,"/login")
+  }
+  else{
+    res.send('INVALID PASSWORD')
+  }
+  
 })
 
 app.get('/feed', (req, res) => {
@@ -86,6 +94,9 @@ app.get('/users/:id', (req,res) => {
         console.log('ERROR:', error); // print error;
         res.send('NOT FOUND')
     });
+})
+app.get('/online', (req,res)=>{
+  
 })
 app.get('/token/', (req,res)=>{
   try {
