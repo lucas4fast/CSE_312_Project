@@ -115,21 +115,24 @@ app.get('/online/', (req,res)=>{
   }
   
 })
-app.post('/online/',(req,res)=>{
+app.post('/online',(req,res)=>{
   try {
     const username = req.body.username
-    db.none(`UPDATE "user" SET online = $1 where username = $2`, [true, username]);
+    console.log(username)
+    db.none(`UPDATE "user" SET online = $1 where username = $2`, [false, username]);
+    res.send('USER SETTING UPDATED')
   }
   catch (error)  {
     console.log(error)
     res.send('NOT FOUND')
   }
 })
-app.post('/logout/', (req,res)=>{
+app.post('/logout', (req,res)=>{
   try {
-    const token = req.cookies['Authentication'];
     const username = req.body.username
+    console.log(username)
     db.none(`UPDATE "user" SET token = $1 where username = $2`, [null, username]);
+    res.send('TOKEN DESTROYED')
   }
   catch (error)  {
     console.log(error)
