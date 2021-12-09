@@ -54,33 +54,47 @@ img {
 }
 </style>
 <Script>
-    function loadPosts(PostList) {
-        // called by reciece message
-        // PostList in from [{Username: "", Caption: "", Picture: }, ...]
+    function CreateCard(user){
+        const container = document.getElementById('feed');
+        if (user['online'] == 'true'){
+          if (user['image_path'] != null){
+            const content = `
+            <div class="card">
+            <img src= ${user['image_path']} alt="Avatar" style="width:100%">
+            <div class="container">
+                <h4><b>${user['username']}</b></h4>
+                <p>Online</p>
+            </div>
+            </div>`
+        }else{
+          const content = `
+            <div class="card">
+            <img src= /unknown alt="Avatar" style="width:100%">
+            <div class="container">
+                <h4><b>${user['username']}</b></h4>
+                <p>Online<p>
+            </div>
+            </div>`
+        }
+        container.innerHTML += content
+      }
 
-        // loop through each post in list
-        // check posts completion, if not complete do not call createCard
-        // create card object by calling CreateCard(Post)
-
-    }
-
-    function CreateCard(Post){
-        // Post in form {Username: "", Caption: "", Picture: }
-        // Do not need to worry about incorrect data
-        // Rename stuff in the html card
-        // Format accordingly
     }
 
     window.onload = function(){
-        loadPosts();
         var xmlHttp = new XMLHttpRequest();
         Url = '/users'
+        var response = ''
         xmlHttp.onreadystatechange = function() {
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-              console.log(request.responseText)
+              response = JSON.parse(xmlHttp.responseText)
+              console.log(response)
         }
       xmlHttp.open("GET", Url, true);
       xmlHttp.send(null);
+      for (var user of response){
+                CreateCard(user);
+              }
     }
 </Script>
 </head>
@@ -91,20 +105,7 @@ img {
   <a href="#profile">Profile</a>
   <a href="/upload">Update Profile Pic</a>
 </div>
-<div style="margin-top: 5%; width: 70%; top: 10%; margin-left: 15%; height: 100%;">
-    <div class="card">
-    <img src="fakeImage.jpg" alt="Avatar" style="width:100%">
-    <div class="container">
-      <h4><b>John Doe</b></h4>
-      <p>Architect & Engineer</p>
-    </div>
-    </div>
-    <div class="card">
-        <img src="fakeImage.jpg" alt="Avatar" style="width:100%">
-        <div class="container">
-          <h4><b>John Doe</b></h4>
-          <p>Architect & Engineer</p>
-        </div>
+<div id='feed' style="margin-top: 5%; width: 70%; top: 10%; margin-left: 15%; height: 100%;">
 </div>
 
 
