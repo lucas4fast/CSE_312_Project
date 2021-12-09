@@ -71,7 +71,8 @@ img {
         // Format accordingly
     }
 
-    function getUsers(){
+    window.onload = function(){
+        loadPosts();
         var xmlHttp = new XMLHttpRequest();
         Url = '/users'
         xmlHttp.onreadystatechange = function() {
