@@ -57,7 +57,7 @@ img {
     function loadPosts(PostList) {
         // called by reciece message
         // PostList in from [{Username: "", Caption: "", Picture: }, ...]
-        
+
         // loop through each post in list
         // check posts completion, if not complete do not call createCard
         // create card object by calling CreateCard(Post)
@@ -69,6 +69,17 @@ img {
         // Do not need to worry about incorrect data
         // Rename stuff in the html card
         // Format accordingly
+    }
+
+    function getUsers(){
+        var xmlHttp = new XMLHttpRequest();
+        Url = '/users'
+        xmlHttp.onreadystatechange = function() {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+              console.log(request.responseText)
+        }
+      xmlHttp.open("GET", Url, true);
+      xmlHttp.send(null);
     }
 </Script>
 </head>
