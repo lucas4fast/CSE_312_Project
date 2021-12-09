@@ -1,28 +1,24 @@
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var logger = require('morgan');
 const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: true });
-const myusers = require('./users.js')
-const uploadRouter = require('./uploader.js');
 const pgp = require("pg-promise")();
 const db = pgp("postgres://postgres:postgres@postgres:5432/postgres");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+const myusers = require('./users.js')
+const uploadRouter = require('./uploader.js');
+
 var app = express();
 const port = 6006;
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
 
-app.use(logger('dev'));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(uploadRouter);
 
 app.get('/', (req, res) => {
