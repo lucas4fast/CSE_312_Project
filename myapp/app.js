@@ -111,11 +111,22 @@ app.get('/online/', (req,res)=>{
   }
   
 })
-app.post('/online',(req,res)=>{
+app.post('/online',async(req,res)=>{
   try {
     const username = req.body.username
     console.log(username)
-    db.none(`UPDATE "user" SET online = $1 where username = $2`, [false, username]);
+    let curr = await db.oneOrNone(`SELECT online from "user" where username = '${username}';`)
+    console.log('CURR:',curr.online)
+    if(curr.online){
+      console.log('IN TRUE CASE:')
+      db.none(`UPDATE "user" SET online = $1 where username = $2`, [false, username]);
+    }
+    else{
+      console.log('IN FALSE CASE:')
+      db.none(`UPDATE "user" SET online = $1 where username = $2`, [true, username]);
+    }
+    
+    //db.none(`UPDATE "user" SET online = $1 where username = $2`, [false, username]);
     res.send('USER SETTING UPDATED')
   }
   catch (error)  {
