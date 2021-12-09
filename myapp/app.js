@@ -70,7 +70,7 @@ app.get('/upload', (req, res) => {
 app.get('/users/', (req,res)=> {
   
   try {
-    db.any(`SELECT * from "user";`)
+    db.any(`SELECT username,id,token,online,image_path from "user";`)
     .then(data => {
       console.log(data)
       res.send(data)
