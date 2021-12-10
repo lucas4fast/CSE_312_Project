@@ -76,7 +76,8 @@ img {
             </div>
             </div>`
         }
-        container.innerHTML += content
+        console.log(content)
+        container.appendChild(content)
       }
 
     }
@@ -86,16 +87,17 @@ img {
         Url = '/users'
         var response = ''
         xmlHttp.onreadystatechange = function() {
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200){
               response = JSON.parse(xmlHttp.responseText)
-              console.log(response)
+              setTimeout(() => {console.log(response);
+                for (var user of response){
+                CreateCard(user)
+              }}, 5000)
         }
       xmlHttp.open("GET", Url, true);
       xmlHttp.send(null);
-      for (var user of response){
-                CreateCard(user);
-              }
     }
+  }
 </Script>
 </head>
 <body>
