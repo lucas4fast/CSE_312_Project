@@ -59,7 +59,14 @@ app.post('/register', urlencodedParser,  async(req, res,next) => {
 })
 
 app.get('/feed', (req, res) => {
-  res.sendFile(path.join(__dirname,"pageDesigns/feed.html"))
+  const token = req.cookies['Authentication'];
+  if(token == null){
+    res.sendFile(path.join(__dirname),"/pageDesigns/notfoundNoAuth.html")
+  }
+  else{
+    res.sendFile(path.join(__dirname,"pageDesigns/feed.html"))
+  }
+  
 })
 
 // Image upload page
