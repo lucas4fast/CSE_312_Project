@@ -16,12 +16,15 @@ async function addImage(username,image_path) {
 }
 
 async function checkUser(username, password) {
+    //let cleaned = username.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
     let user = await db.oneOrNone(`SELECT * FROM "user" where username = '${username}';`);
     console.log('User data: '+user)
+
     if(user == null){
         return false
     }
     else{
+        
         const match = await bcrypt.compare(password,user.password);
         console.log('Match: '+match)
         return match
@@ -44,6 +47,8 @@ async function addToken(username,token){
 }
 
 async function createUser(user,pass) {
+    //let cleaned = user.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+
     let hashPass = await bcrypt.hash(pass,saltRounds);
     console.log('Attempting to insert username: '+user + ' and password: '+ pass)
     db.one(`INSERT INTO "user"(username,password,online) VALUES('${user}','${hashPass}',true) RETURNING id;`)

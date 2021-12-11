@@ -50,34 +50,29 @@ app.get('/feed', async(req,res)=> {
   }
   else{
     //set the appropriate HTTP header
-  res.setHeader('Content-Type', 'text/html');
-  //res.write
-  //send multiple responses to the client
-
-
-
-  try {
-    res.write(`<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>body { margin: 0; font-family: Arial, Helvetica, sans-serif;}.topnav { overflow: hidden; background-color: black;}.topnav b { float: left; color: #f2f2f2; text-align: center; padding: .5%; text-decoration: none; font-size: 180%;}.topnav a { float: right; color: #f2f2f2; text-align: center; padding: .8%; text-decoration: none; font-size: 110%;}.topnav a:hover { background-color: #ddd; color: black;}.topnav a.active { background-color: #04AA6D; color: white;}.card { box-shadow: 0 .5% 1% 0 rgba(0,0,0,0.2); transition: 0.3s; border-radius: 2%; padding: 1%; background-color: gray; margin-top: 1.5%;}img { border-radius: 2%;}</style></head><body><div class="topnav"> <b href="#home">Minima</b> <a href="#profile">Profile</a> <a href="/upload">Update Profile Pic</a></div><div id='feed' style="margin-top: 5%; width: 70%; top: 10%; margin-left: 15%; height: 100%;"></div> <form action="/logout" method="post"> <input id="username" type="text" name="username" placeholder="*Username"> <input type="submit" value="Logout"> </form> <form action="/online" method="post"> <input id="username2" type="text" name="username" placeholder="*Username"> <input type="submit" value="Toggle Offline Setting"> </form></body></html>`)
-    
-    db.any(`SELECT online,token,username from "user";`)
-    .then(data => {
-      data.map(u =>{
-        if(u.token != null && u.online != false){
-          console.log(u.username)
-          res.write('<h1>User: '+u.username+'<img src="'+u.image_path+'" alt="Profile Pic Absent"></h1>')
-        }
+    res.setHeader('Content-Type', 'text/html');
+    try {
+      res.write(`<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>body { margin: 0; font-family: Arial, Helvetica, sans-serif;}.topnav { overflow: hidden; background-color: black;}.topnav b { float: left; color: #f2f2f2; text-align: center; padding: .5%; text-decoration: none; font-size: 180%;}.topnav a { float: right; color: #f2f2f2; text-align: center; padding: .8%; text-decoration: none; font-size: 110%;}.topnav a:hover { background-color: #ddd; color: black;}.topnav a.active { background-color: #04AA6D; color: white;}.card { box-shadow: 0 .5% 1% 0 rgba(0,0,0,0.2); transition: 0.3s; border-radius: 2%; padding: 1%; background-color: gray; margin-top: 1.5%;}img { border-radius: 2%;}</style></head><body><div class="topnav"> <b href="#home">Minima</b> <a href="#profile">Profile</a> <a href="/upload">Update Profile Pic</a></div><div id='feed' style="margin-top: 5%; width: 70%; top: 10%; margin-left: 15%; height: 100%;"></div> <form action="/logout" method="post"> <input id="username" type="text" name="username" placeholder="*Username"> <input type="submit" value="Logout"> </form> <form action="/online" method="post"> <input id="username2" type="text" name="username" placeholder="*Username"> <input type="submit" value="Toggle Offline Setting"> </form></body></html>`)
+      
+      db.any(`SELECT online,token,username from "user";`)
+      .then(data => {
+        data.map(u =>{
+          if(u.token != null && u.online != false){
+            //console.log(u.username)
+            //const temp = u.username
+            //temp = temp.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
+            res.write('<h1>User: '+u.username.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')+'<img src="'+u.image_path+'" alt="Profile Pic Absent"></h1>')
+          }
+        })
+        //console.log(data)
+        res.end();
       })
-      //console.log(data)
-      res.end();
-    })
-  }
-  catch (error) {
-    res.send('ERROR',error)
-  }
-  //end the response process
-  }
-  
-  
+    }
+    catch (error) {
+      res.send('ERROR',error)
+    }
+    //end the response process
+    }
 })
 
 app.get('/register', (req, res) => {
@@ -99,25 +94,44 @@ app.post('/register', urlencodedParser,  async(req, res,next) => {
 
 // Image upload page
 app.get('/upload', (req, res) => {
-  res.sendFile(path.join(__dirname,"/pageDesigns/imageUpload.html"))
+  const token = req.cookies['Authentication'];
+  if(token == null){
+    res.sendFile(path.join(__dirname),"/pageDesigns/notfoundNoAuth.html")
+  }
+  else{
+    res.sendFile(path.join(__dirname,"/pageDesigns/imageUpload.html"))
+  }
+  
 })
 
 app.get('/users/', (req,res)=> {
+  const token = req.cookies['Authentication'];
+  if(token == null){
+    res.sendFile(path.join(__dirname),"/pageDesigns/notfoundNoAuth.html")
+  }
+  else{
+    try {
+      db.any(`SELECT username,id,token,online,image_path from "user";`)
+      .then(data => {
+        console.log(data)
+        res.send(data)
+      })
+    }
+    catch (error) {
+      res.send('ERROR',error)
+    }
+  }
   
-  try {
-    db.any(`SELECT username,id,token,online,image_path from "user";`)
-    .then(data => {
-      console.log(data)
-      res.send(data)
-    })
-  }
-  catch (error) {
-    res.send('ERROR',error)
-  }
 })
 
 app.get('/users/:id', (req,res) => {
-  db.oneOrNone(`select username from "user" where id = '${req.params.id}';`)
+
+  const token = req.cookies['Authentication'];
+  if(token == null){
+    res.sendFile(path.join(__dirname),"/pageDesigns/notfoundNoAuth.html")
+  }
+  else{
+    db.oneOrNone(`select username from "user" where id = '${req.params.id}';`)
     .then(data => {
         console.log(data.username); // print new user id;
         res.send(data.username)
@@ -126,9 +140,17 @@ app.get('/users/:id', (req,res) => {
         console.log('ERROR:', error); // print error;
         res.send('NOT FOUND')
     });
+  }
+  
 })
 
 app.get('/online/', (req,res)=>{
+
+  const token = req.cookies['Authentication'];
+  if(token == null){
+    res.sendFile(path.join(__dirname),"/pageDesigns/notfoundNoAuth.html")
+  }
+  else{
   var users = []
   try {
     db.any(`SELECT online,token,username from "user";`)
@@ -146,42 +168,55 @@ app.get('/online/', (req,res)=>{
   catch (error) {
     res.send('ERROR',error)
   }
+}
 })
 
 app.post('/online',async(req,res)=>{
-  try {
-    const username = req.body.username
-    console.log(username)
-    let curr = await db.oneOrNone(`SELECT online from "user" where username = '${username}';`)
-    console.log('CURR:',curr.online)
-    if(curr.online){
-      console.log('IN TRUE CASE:')
-      db.none(`UPDATE "user" SET online = $1 where username = $2`, [false, username]);
-    }
-    else{
-      console.log('IN FALSE CASE:')
-      db.none(`UPDATE "user" SET online = $1 where username = $2`, [true, username]);
-    }
-    
-    //db.none(`UPDATE "user" SET online = $1 where username = $2`, [false, username]);
-    res.send('USER SETTING UPDATED')
+  const token = req.cookies['Authentication'];
+  if(token == null){
+    res.sendFile(path.join(__dirname),"/pageDesigns/notfoundNoAuth.html")
   }
-  catch (error)  {
-    console.log(error)
-    res.send('NOT FOUND')
-  }
+  else{
+    try {
+      const username = req.body.username
+      console.log(username)
+      let curr = await db.oneOrNone(`SELECT online from "user" where username = '${username}';`)
+      console.log('CURR:',curr.online)
+      if(curr.online){
+        console.log('IN TRUE CASE:')
+        db.none(`UPDATE "user" SET online = $1 where username = $2`, [false, username]);
+      }
+      else{
+        console.log('IN FALSE CASE:')
+        db.none(`UPDATE "user" SET online = $1 where username = $2`, [true, username]);
+      }
+      
+      //db.none(`UPDATE "user" SET online = $1 where username = $2`, [false, username]);
+      res.send('USER SETTING UPDATED')
+    }
+    catch (error)  {
+      console.log(error)
+      res.send('NOT FOUND')
+    }
+}
 })
 app.post('/logout', (req,res)=>{
-  try {
-    const username = req.body.username
-    console.log(username)
-    db.none(`UPDATE "user" SET token = $1 where username = $2`, [null, username]);
-    res.send('TOKEN DESTROYED')
+  const token = req.cookies['Authentication'];
+  if(token == null){
+    res.sendFile(path.join(__dirname),"/pageDesigns/notfoundNoAuth.html")
   }
-  catch (error)  {
-    console.log(error)
-    res.send('NOT FOUND')
-  }
+  else{
+    try {
+      const username = req.body.username
+      console.log(username)
+      db.none(`UPDATE "user" SET token = $1 where username = $2`, [null, username]);
+      res.send('TOKEN DESTROYED')
+    }
+    catch (error)  {
+      console.log(error)
+      res.send('NOT FOUND')
+    }
+}
 })
 
 app.get('/token/', (req,res)=>{
