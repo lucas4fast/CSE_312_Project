@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
   }
 });
 
-app.get("/message", (req, res) => {
+app.get("/message.html", (req, res) => {
   const token = req.cookies["Authentication"];
   if (token == null) {
     res.sendFile(path.join(__dirname), "/src/notfoundNoAuth.html");

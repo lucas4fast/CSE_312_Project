@@ -12,4 +12,8 @@ function getUser(userId) {
   return allUsers.find((currentUser) => currentUser.userId === userId);
 }
 
-module.exports = { addUser, getUser };
+function getAllUsers() {
+  return allUsers;
+}
+
+module.exports = { addUser, getUser, getAllUsers };

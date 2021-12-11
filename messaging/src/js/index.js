@@ -1,4 +1,15 @@
 const socket = io();
+const { getAllUsers } = require("./helpers/user");
+
+const chatList = document.getElementById("userChats");
+const users = getAllUsers();
+
+for (user of users) {
+  const chat = document.createElement("option");
+  chat.value = user.username;
+  chat.innerHTML = user.username;
+  chatList.appendChild(chat);
+}
 
 const { username, userChats } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
@@ -10,9 +21,11 @@ socket.on("message", (message) => {
   displayChat(message);
 });
 
-document.getElementById("chat-input").addEventListener("submit", (event) => {
+const inputChat = document.getElementById("chat-input");
+inputChat.addEventListener("submit", (event) => {
   event.preventDefault();
   const message = document.getElementById("messageText").value;
+  console.log(message);
   socket.emit("chat-message", message);
 });
 
