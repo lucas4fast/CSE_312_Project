@@ -42,8 +42,14 @@ app.post('/login', urlencodedParser,  async(req, res) => {
   }
 })
 
-app.get('/testing', async(req,res)=> {
-  //set the appropriate HTTP header
+app.get('/feed', async(req,res)=> {
+
+  const token = req.cookies['Authentication'];
+  if(token == null){
+    res.sendFile(path.join(__dirname),"/pageDesigns/notfoundNoAuth.html")
+  }
+  else{
+    //set the appropriate HTTP header
   res.setHeader('Content-Type', 'text/html');
   //res.write
   //send multiple responses to the client
@@ -58,7 +64,7 @@ app.get('/testing', async(req,res)=> {
       data.map(u =>{
         if(u.token != null && u.online != false){
           console.log(u.username)
-          res.write('<h1>User: '+u.username+'<img src="/var/lib/docker/volumes/media/arsenalCREST11.jpg" alt="Profile Pic Absent"></h1>')
+          res.write('<h1>User: '+u.username+'<img src="'+u.image_path+'" alt="Profile Pic Absent"></h1>')
         }
       })
       //console.log(data)
@@ -69,6 +75,8 @@ app.get('/testing', async(req,res)=> {
     res.send('ERROR',error)
   }
   //end the response process
+  }
+  
   
 })
 
