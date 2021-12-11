@@ -42,6 +42,30 @@ app.post('/login', urlencodedParser,  async(req, res) => {
   }
 })
 
+app.get('/testing', async(req,res)=> {
+  //set the appropriate HTTP header
+  res.setHeader('Content-Type', 'text/html');
+  //res.write
+  //send multiple responses to the client
+  try {
+    res.write
+    db.any(`SELECT username,id,token,online,image_path from "user";`)
+    .then(data => {
+      data.map((u)=> {
+        console.log(u)
+        res.write(`<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>body { margin: 0; font-family: Arial, Helvetica, sans-serif;}.topnav { overflow: hidden; background-color: black;}.topnav b { float: left; color: #f2f2f2; text-align: center; padding: .5%; text-decoration: none; font-size: 180%;}.topnav a { float: right; color: #f2f2f2; text-align: center; padding: .8%; text-decoration: none; font-size: 110%;}.topnav a:hover { background-color: #ddd; color: black;}.topnav a.active { background-color: #04AA6D; color: white;}.card { box-shadow: 0 .5% 1% 0 rgba(0,0,0,0.2); transition: 0.3s; border-radius: 2%; padding: 1%; background-color: gray; margin-top: 1.5%;}img { border-radius: 2%;}</style></head><body><div class="topnav"> <b href="#home">Minima</b> <a href="#profile">Profile</a> <a href="/upload">Update Profile Pic</a></div><div id='feed' style="margin-top: 5%; width: 70%; top: 10%; margin-left: 15%; height: 100%;"></div> <form action="/logout" method="post"> <input id="username" type="text" name="username" placeholder="*Username"> <input type="submit" value="Logout"> </form> <form action="/online" method="post"> <input id="username2" type="text" name="username" placeholder="*Username"> <input type="submit" value="Toggle Offline Setting"> </form></body></html>`)
+        res.write('<h1>User: '+u.username+'<img src="fakeImage.jpg" alt="Profile Pic Absent'+u.image_path+'"></h1>')
+      })
+      res.end();
+    })
+  }
+  catch (error) {
+    res.send('ERROR',error)
+  }
+  //end the response process
+  
+})
+
 app.get('/register', (req, res) => {
   res.sendFile(path.join(__dirname,"/pageDesigns/register.html"))
 })
@@ -87,6 +111,7 @@ app.get('/users/', (req,res)=> {
     res.send('ERROR',error)
   }
 })
+
 app.get('/users/:id', (req,res) => {
   db.oneOrNone(`select username from "user" where id = '${req.params.id}';`)
     .then(data => {
@@ -98,6 +123,7 @@ app.get('/users/:id', (req,res) => {
         res.send('NOT FOUND')
     });
 })
+
 app.get('/online/', (req,res)=>{
   var users = []
   try {
@@ -116,8 +142,8 @@ app.get('/online/', (req,res)=>{
   catch (error) {
     res.send('ERROR',error)
   }
-  
 })
+
 app.post('/online',async(req,res)=>{
   try {
     const username = req.body.username
