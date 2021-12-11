@@ -1,10 +1,10 @@
 const allUsers = [];
 
-function addUser(userId, username, userChats) {
-  const currentUser = { userId, username, userChats };
-
+function addUser(id, username, userChats) {
+  const currentUser = { id, username, userChats };
+  //add this user to the list of all users
   allUsers.push(currentUser);
-
+  //return this user so that we can add him/her to a room later
   return currentUser;
 }
 

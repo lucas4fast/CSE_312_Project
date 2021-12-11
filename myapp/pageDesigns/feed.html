@@ -1,125 +1,141 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-}
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+      }
 
-.topnav {
-  overflow: hidden;
-  background-color: black;
-}
+      .topnav {
+        overflow: hidden;
+        background-color: black;
+      }
 
-.topnav b {
-  float: left;
-  color: #f2f2f2;
-  text-align: center;
-  padding: .5%;
-  text-decoration: none;
-  font-size: 180%;
-}
+      .topnav b {
+        float: left;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 0.5%;
+        text-decoration: none;
+        font-size: 180%;
+      }
 
-.topnav a {
-  float: right;
-  color: #f2f2f2;
-  text-align: center;
-  padding: .8%;
-  text-decoration: none;
-  font-size: 110%;
-}
+      .topnav a {
+        float: right;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 0.8%;
+        text-decoration: none;
+        font-size: 110%;
+      }
 
-.topnav a:hover {
-  background-color: #ddd;
-  color: black;
-}
+      .topnav a:hover {
+        background-color: #ddd;
+        color: black;
+      }
 
-.topnav a.active {
-  background-color: #04AA6D;
-  color: white;
-}
-.card {
-  box-shadow: 0 .5% 1% 0 rgba(0,0,0,0.2);
-  transition: 0.3s;
-  border-radius: 2%;
-  padding: 1%;
-  background-color: gray;
-  margin-top: 1.5%;
-}
+      .topnav a.active {
+        background-color: #04aa6d;
+        color: white;
+      }
+      .card {
+        box-shadow: 0 0.5% 1% 0 rgba(0, 0, 0, 0.2);
+        transition: 0.3s;
+        border-radius: 2%;
+        padding: 1%;
+        background-color: gray;
+        margin-top: 1.5%;
+      }
 
-img {
-  border-radius: 2%;
-}
-</style>
-<Script>
-    function CreateCard(user){
-        const container = document.getElementById('feed');
-        if (user['online'] == 'true'){
-          if (user['image_path'] != null){
+      img {
+        border-radius: 2%;
+      }
+    </style>
+    <script>
+      function CreateCard(user) {
+        const container = document.getElementById("feed");
+        if (user["online"] == "true") {
+          if (user["image_path"] != null) {
             const content = `
             <div class="card">
-            <img src= ${user['image_path']} alt="Avatar" style="width:100%">
+            <img src= ${user["image_path"]} alt="Avatar" style="width:100%">
             <div class="container">
-                <h4><b>${user['username']}</b></h4>
+                <h4><b>${user["username"]}</b></h4>
                 <p>Online</p>
             </div>
-            </div>`
-        }else{
-          const content = `
+            </div>`;
+          } else {
+            const content = `
             <div class="card">
             <img src= /unknown alt="Avatar" style="width:100%">
             <div class="container">
-                <h4><b>${user['username']}</b></h4>
+                <h4><b>${user["username"]}</b></h4>
                 <p>Online<p>
             </div>
-            </div>`
+            </div>`;
+          }
+          console.log(content);
+          container.appendChild(content);
         }
-        console.log(content)
-        container.appendChild(content)
       }
 
-    }
-
-    window.onload = function(){
+      window.onload = function () {
         var xmlHttp = new XMLHttpRequest();
-        Url = '/users'
-        var response = ''
-        xmlHttp.onreadystatechange = function() {
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200){
-              response = JSON.parse(xmlHttp.responseText)
-              setTimeout(() => {console.log(response);
-                for (var user of response){
-                CreateCard(user)
-              }}, 5000)
-        }
-      xmlHttp.open("GET", Url, true);
-      xmlHttp.send(null);
-    }
-  }
-</Script>
-</head>
-<body>
+        Url = "/users";
+        var response = "";
+        xmlHttp.onreadystatechange = function () {
+          if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+            response = JSON.parse(xmlHttp.responseText);
+            setTimeout(() => {
+              console.log(response);
+              for (var user of response) {
+                CreateCard(user);
+              }
+            }, 5000);
+          }
+          xmlHttp.open("GET", Url, true);
+          xmlHttp.send(null);
+        };
+      };
+    </script>
+  </head>
+  <body>
+    <div class="topnav">
+      <b href="#home">Minima</b>
+      <a href="#profile">Profile</a>
+      <a href="/upload">Update Profile Pic</a>
+      <a href="http://localhost:8001">messaging</a>
+    </div>
+    <div
+      id="feed"
+      style="
+        margin-top: 5%;
+        width: 70%;
+        top: 10%;
+        margin-left: 15%;
+        height: 100%;
+      "
+    ></div>
 
-<div class="topnav">
-  <b href="#home">Minima</b>
-  <a href="#profile">Profile</a>
-  <a href="/upload">Update Profile Pic</a>
-</div>
-<div id='feed' style="margin-top: 5%; width: 70%; top: 10%; margin-left: 15%; height: 100%;">
-</div>
-
-
-  <form action="/logout" method="post">
-    <input id="username" type="text" name="username" placeholder="*Username">
-    <input type="submit" value="Logout">
-  </form>
-  <form action="/online" method="post">
-    <input id="username2" type="text" name="username" placeholder="*Username">
-    <input type="submit" value="Toggle Offline Setting">
-  </form>
-
-
-</body>
+    <form action="/logout" method="post">
+      <input
+        id="username"
+        type="text"
+        name="username"
+        placeholder="*Username"
+      />
+      <input type="submit" value="Logout" />
+    </form>
+    <form action="/online" method="post">
+      <input
+        id="username2"
+        type="text"
+        name="username"
+        placeholder="*Username"
+      />
+      <input type="submit" value="Toggle Offline Setting" />
+    </form>
+  </body>
 </html>
